@@ -1,16 +1,14 @@
 ---
 title: "Kaprekar's Constant"
 excerpt: "Visualizing patterns in generating functions"
-coverImage: "/assets/blog/dynamic-routing/cover.jpg"
+coverImage: "/assets/blog/kaprekar/kapCover.png"
 date: "2023-01-01T18:40:07.322Z"
 author:
   name: Anthony Rolland
   picture: "https://media.licdn.com/dms/image/D4D35AQEZyxo_dMjbMA/profile-framedphoto-shrink_100_100/0/1670519479753?e=1672977600&v=beta&t=nCsjIhV8KTriCxjJQ9kLcxs5exT26xquyISF7NQwtNQ"
 ogImage:
-  url: "/assets/blog/dynamic-routing/cover.jpg"
+  url: "/assets/blog/kaprekar/kapCover.png"
 ---
-
-# Kaprekar's Constant
 
 [_this article was pulled from a twitter thread that I wrote here_](https://twitter.com/Anthony52182757/status/1521280144018661378)
 
@@ -29,21 +27,69 @@ This process and the values for which it converges was discovered in by a 20th c
 
 Here's an example for base 10 and length 4:
 
-![Convergence](/assets/blog/kaprekar/convergence.jpg "Convergence")
+<img
+  src="/assets/blog/kaprekar/convergence.jpg"
+  alt="Convergence"
+  style={{
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "100%",
+  }}
+/>
 
-So what if we took this process a step further and took the first 100 kaprekar numbers of length 4 and base 10 and arranged them into a square. This square would have ten rows and ten columns with varying times to convergence. Here's an example image:
+So what if we took this process a step further and took the first 100 kaprekar numbers
+of length 4 and base 10 and arranged them into a square. This square would have ten
+rows and ten columns with varying times to convergence. Here's an example image:
 
-![Matrix](/assets/blog/kaprekar/matrix.jpg "Matrix")
+<img
+  src="/assets/blog/kaprekar/matrix.jpg"
+  alt="Matrix"
+  style={{
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    height: "30vh",
+  }}
+/>
 
 Then using a linear interpolation over the range of the convergence values, we can apply a color scheme to the convergence values in the matrix. It looks something like this:
 
-![matrixColored](/assets/blog/kaprekar/matrixColored.jpg "matrixColored")
+<img
+  src="/assets/blog/kaprekar/matrixColored.jpg"
+  alt="matrixColored"
+  style={{
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    height: "30vh",
+  }}
+/>
 
 Without much massaging, we can generate seemingly random and complex patterns. We can change the way we construct the matrix, change the base, change the length, change the color interpolation ... etc. We can even take the matrices and tessalate them to provide symmetry beyond that provided by the initial input.
 
 Here are a few more examples:
-![large](/assets/blog/kaprekar/large.jpg "large")
-![differentBases](/assets/blog/kaprekar/differentBases.jpg "differentBases")
-![tessalate](/assets/blog/kaprekar/tessalate.png "tessalate")
+
+<BootstrapCarousel>
+  {[
+    {
+      item: <img src="/assets/blog/kaprekar/large.jpg" alt="large" />,
+      title: "0 to 9999",
+    },
+    {
+      item: (
+        <img
+          src="/assets/blog/kaprekar/differentBases.jpg"
+          alt="differentBases"
+        />
+      ),
+      title: "base 16 length 3",
+    },
+    {
+      item: <img src="/assets/blog/kaprekar/tessalate.png" alt="tessalate" />,
+      title: "tessalating a tile of size 10 x 10",
+    },
+  ]}
+</BootstrapCarousel>
 
 In service of learning more about the visualizations you can make from kaprekar's routine, I've created a website that allows you to make these images within the frontend. Here's the [link](https://onlyvibes.web.app/?base=10&length=4&rows=100&cols=100&wrappingRows=10&wrappingCols=10&limit=100&colorSpace=interpolateYlGnBu).

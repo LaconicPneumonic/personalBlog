@@ -7,11 +7,15 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
+    "esbuild": "^0.16.15",
     "gray-matter": "^4.0.3",
+    "mdx-bundler": "^9.2.1",
     "next": "latest",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
     "remark": "^14.0.2",
     "remark-html": "^15.0.1",

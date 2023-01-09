@@ -18,6 +18,11 @@ const CoverImage = ({ title, src, slug }: Props) => {
       })}
       width={1300}
       height={630}
+      style={{
+        objectFit: "cover",
+        width: "100%",
+        height: "35vh",
+      }}
     />
   );
   return (
