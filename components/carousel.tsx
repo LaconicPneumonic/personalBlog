@@ -1,8 +1,7 @@
-//carousels/Bootstrap.js
 import React, { useState } from "react";
 import { Carousel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../styles/Bootstrap.module.css";
+import styles from "../styles/carousel.module.css";
 
 export default function BootstrapCarousel({
   children,

@@ -20,6 +20,11 @@ export default function Index({ allPosts }: Props) {
       <Layout>
         <Head>
           <title>Next.js Blog Example with {CMS_NAME}</title>
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charSet="utf-8"
+          ></script>
         </Head>
         <Container>
           <Intro />

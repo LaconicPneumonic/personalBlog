@@ -20,8 +20,8 @@ const CoverImage = ({ title, src, slug }: Props) => {
       height={630}
       style={{
         objectFit: "cover",
-        width: "100%",
         height: "35vh",
+        aspectRatio: 2 / 1,
       }}
     />
   );
