@@ -1,5 +1,5 @@
 import { ImageResponse } from "@vercel/og";
-import * as d3 from "d3";
+import * as d3 from "d3-scale-chromatic";
 import { NextRequest } from "next/server";
 
 export const config = {
