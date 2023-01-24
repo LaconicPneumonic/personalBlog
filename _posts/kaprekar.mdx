@@ -10,20 +10,39 @@ ogImage:
   url: "/assets/blog/kaprekar/kapCover.png"
 ---
 
+## Intro
+
 [_this article was pulled from a twitter thread that I wrote here_](https://twitter.com/Anthony52182757/status/1521280144018661378)
 
-Math is really magical.
+Math is really magical. It's filled with seeminlgy random symbols and operations
+that give rise to interesting and beautiful patterns. In this post, I'll be presenting a
+pattern I read about that turned into quite an involved art project. We'll go from
+fiddling with numbers to live a live and active website by the end. Let's get started!
 
-Take the number 6174. Turn it into two numbers with digits ascending (1476) and descending (7641). Subtract the larger from the smaller to get 7641 - 1467 = 6174. What if we start with 8028?
+---
+
+## Playing With Numbers
+
+Take the number 6174. Turn it into two numbers with digits ascending (1476) and descending (7641).
+Subtract the larger from the smaller to get 7641 - 1467 = 6174. Miracurously, we've come back to
+the same number in one operation. What if we start with 8028? We'll see that it converges in 2 cycles
+of this process.
 
 1. 8820 - 0288 = 8532
 2. 8532 - 2358 = 6174
 
-If we start with 1111, it does not converge.
+If we start with 1111, it converges to a different value.
 
 1. 1111 - 1111 = 0000
 
-This process and the values for which it converges was discovered in by a 20th century mathematician named [D. R. Kaprekar](https://en.wikipedia.org/wiki/D._R._Kaprekar). The eponymous routine, "Kaprekar's Routine" was proven to converge to "Kaprekar's Constant", 6174, for all 4 digit values. With different inputs, we can see that they converge with different amount of iterations. Some 1, some 5 ...etc.
+While this outcome is interesting, we'll see that any value with all of the same digits will
+converge to 0000. Let's model all 4 digit numbers with all the same digit in each place as "DDDD".
+The reverse of "DDDD" is the same exact value, so subtracting from each other will always result in 0000.
+
+This process and the values for which it converges was discovered in by a 20th century mathematician
+named [D. R. Kaprekar](https://en.wikipedia.org/wiki/D._R._Kaprekar). The eponymous routine,
+"Kaprekar's Routine" was proven to converge to "Kaprekar's Constant", 6174, for all 4 digit values.
+With different inputs, we can see that they converge with different amount of iterations. Some 1, some 5 ...etc.
 
 Here's an example for base 10 and length 4:
 
@@ -38,9 +57,10 @@ Here's an example for base 10 and length 4:
   }}
 />
 
-So what if we took this process a step further and took the first 100 kaprekar numbers
+So what if we took this process a step further and took the first 100 valid inputs
 of length 4 and base 10 and arranged them into a square. This square would have ten
-rows and ten columns with varying times to convergence. Here's an example image:
+rows and ten columns and each cell would be populated with the number of cycles it took the input to converge.
+Here's what that looks like as an image:
 
 <img
   src="/assets/blog/kaprekar/matrix.jpg"
@@ -53,7 +73,10 @@ rows and ten columns with varying times to convergence. Here's an example image:
   }}
 />
 
-Then using a linear interpolation over the range of the convergence values, we can apply a color scheme to the convergence values in the matrix. It looks something like this:
+Then using a linear interpolation over the range of the convergence values, we can apply a color
+scheme to the convergence values in the matrix. The interpolation scheme we're using here is provided
+by function in d3 called[ _interpolateReds_](https://github.com/d3/d3-scale-chromatic#interpolateReds).
+We'll get something that looks like this:
 
 <img
   src="/assets/blog/kaprekar/matrixColored.jpg"
