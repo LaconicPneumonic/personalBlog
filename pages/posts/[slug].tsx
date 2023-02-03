@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import BootstrapCarousel from "../../components/carousel";
 import Container from "../../components/container";
 import Header from "../../components/header";
+import Highlighter from "../../components/highlighter";
 import Layout from "../../components/layout";
 import PostHeader from "../../components/post-header";
 import PostTitle from "../../components/post-title";
@@ -52,7 +53,12 @@ export default function Post({ post, morePosts, preview }: Props) {
                 coverImage={post.coverImage}
                 date={post.date}
               />
-              <PostContent components={{ BootstrapCarousel }} />
+              <PostContent
+                components={{
+                  BootstrapCarousel,
+                  Highlighter,
+                }}
+              />
             </article>
           </>
         )}
