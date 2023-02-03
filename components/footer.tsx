@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="py-28 flex flex-col lg:flex-row items-center">
             <div className="tracking-tighter leading-tight text-center lg:text-center mb-10 lg:mb-0 lg:pr-4 lg:w-1/2">
               <a
-                href="https://twitter.com/Anthony52182757"
+                href="https://twitter.com/rollandonariver"
                 className="twitter-follow-button"
                 data-show-count="true"
                 data-size="large"
