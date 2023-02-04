@@ -1,0 +1,113 @@
+---
+title: "Fixed Width Sorting"
+excerpt: "Sorting In Place With Copies"
+coverImage: "/assets/blog/dynamic-routing/cover.jpg"
+date: "2023-01-20T22:35:07.322Z"
+author:
+  name: Anthony Rolland
+  picture: "https://media.licdn.com/dms/image/D4D35AQEZyxo_dMjbMA/profile-framedphoto-shrink_100_100/0/1670519479753?e=1672977600&v=beta&t=nCsjIhV8KTriCxjJQ9kLcxs5exT26xquyISF7NQwtNQ"
+ogImage:
+  url: "/api/cover?seed=1&background=yellow"
+---
+
+## Intro
+
+I was working on a coding problem for an interview. It was to sort an array
+of intergers with the caveat that the only integers included in the array were
+0, 1 and 2. When sorting, we often lean on the default functionality provided by
+the standard language. `list.sort(...)` in python uses a comparitive sort with about
+worst case runtime of O(NlogN) where N is the length of the list. Comparitive sorting
+algorithms require the minimal amount of information about your input sequence to
+create a sorted output. All you need is to define a comparitor function that describes
+any type of order to.
+
+In situations like this coding interview where we have more information like the total
+range of values that we'll be using, we can do quite a bit better and perform our sort
+in linear time. The family of algorithms that we can apply are called [non-comparative sorts](https://en.wikipedia.org/wiki/Sorting_algorithm).
+To reduce the amount of space that we utilize, we can attempt to perform the sort in place.
+
+Before we start off with the final algorithm that I submitted, lets start with simpler solutions
+and work our way towards the final solution while discussing the benefits of downstream options.
+For that we'll need to formalize our problem a bit. Our array will be called `A` the `len(A)`
+will be equal to `N` and `0 <= A[i] <= k`. In our case, `N` is much larger than `k`.
+
+## Bucket Sort
+
+The intuition behind this solution is to create a "bucket" that corresponds to each value
+within the allowable range of your input. For each element, we put the element into the
+correct bucket. After we finish iterating through the array, we empty the buckets in order
+_spilling_ their contents into our final sorted array.
+
+
+Checkout some example code:
+
+## Traditional Counting Sort
+
+Traditional creates an inplace algorithm by 
+
+
+export const codeString = `
+import random
+from collections import defaultdict
+def fast_sort(arr):
+
+    cnts = defaultdict(int)
+    maxVal = max(arr)
+
+    for v in arr:
+    cnts[v] += 1
+
+    bounds = [0]
+
+    for i in range(maxVal + 1):
+    bounds.append(bounds[-1] + cnts[i])
+
+    pointerMap = {i: bounds[i] for i in range(maxVal+ 1)}
+
+    i = 0
+    while i < len(arr):
+
+        # keep putting the value at i in the right place
+        # until arr[i] is in the right place
+        while not (bounds[arr[i]] <= i <= bounds[arr[i] + 1]):
+
+          v = arr[i]
+          temp = arr[pointerMap[v]]
+
+
+          arr[pointerMap[v]] = v
+
+          pointerMap[v] += 1
+          arr[i] = temp
+
+
+
+        i += 1
+
+    # At worst you visit every index twice in a reversed array O(2N)
+
+    # You have to define counts which is O(k) in space and O(N) in time to construct
+
+    # final time and space is t=O(N) and s=O(k)
+
+    # in our case k is 3, so that's constant.
+
+    # the benefit of this solution over what we described at the end is that it
+
+    # allows us to swap values as opposed to overwritting. If the "bucket" we were
+
+    # sorting into was determined by a function, this would preserve the underlying
+
+    # values
+
+    return arr
+
+    print(fast*sort([0,2,2,2,2,0,1,0,2,1,0]))
+    print(fast_sort([0,2,2,12,22,0,1,0,2,1,0]))
+    print(fast_sort([random.randint(0, 2) for * in range(100)]))
+
+`;
+
+<Highlighter codeString={codeString} language="python">
+
+</Highlighter>
