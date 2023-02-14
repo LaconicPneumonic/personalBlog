@@ -16,7 +16,7 @@ I've spent most of my life in major cities with major public transportation infr
 
 Let's put an example behind this complexity. Suppose that I'm moving to New York City for a new job. My job requires me to come to the office five days a week, and I need to find a place to live. Looking at a map of NYC, I see two neighborhoods of note: Redhook and Sunnyside. Both have relatively cheap rent (a major plus in this city), and both are roughly equidistant when measured in euclidean space i.e. 'as the crow flies'. When I look at their commute time though, I get a completely different answer. From Red Hook to Hudson yards, it will take me 1HR! From Sunnyside to Hudson yards, it will take me 30 mins. That's half the time at the same distance just because you have access to the 7 express train that runs through Sunnyside while in Redhook you have to take a bus and transfer to a slower line.
 
-<FlexContainer classes="flex flex-col md:flex-row justify-around content-around items-center gap-2">
+<FlexContainer classes="flex flex-col md:flex-row flex-wrap justify-around content-around items-center gap-2">
 <Image
   src="/assets/blog/betterMaps/sunnyside.png"
   width={400}
@@ -61,7 +61,7 @@ Finding the distance between a single source and all possible sinks in this grap
 
 ### Fun visualizations
 
-<FlexContainer classes="flex flex-col md:flex-row justify-around content-around items-center gap-2">
+<FlexContainer classes="flex flex-col md:flex-row flex-wrap justify-around content-around items-center gap-2">
   <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
     <h4> Town, No Subway </h4>
     <Map n={5} seed={1} sideLength={300} />
