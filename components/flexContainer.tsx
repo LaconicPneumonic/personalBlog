@@ -7,5 +7,9 @@ export default function FlexContainer({
   classes: string;
   children: Array<JSX.Element>;
 }) {
-  return <div className={classes}>{children}</div>;
+  return (
+    <div className={classes + " justify-around content-around items-center"}>
+      {children}
+    </div>
+  );
 }

@@ -200,7 +200,6 @@ function Map(props: Props) {
     <div>
       {props.showControls && (
         <>
-          {" "}
           <div className="flex place-content-center w-full">
             <button
               type="button"

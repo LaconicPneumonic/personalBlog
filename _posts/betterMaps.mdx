@@ -16,7 +16,7 @@ I've spent most of my life in major cities with major public transportation infr
 
 Let's put an example behind this complexity. Suppose that I'm moving to New York City for a new job. My job requires me to come to the office five days a week, and I need to find a place to live. Looking at a map of NYC, I see two neighborhoods of note: Redhook and Sunnyside. Both have relatively cheap rent (a major plus in this city), and both are roughly equidistant when measured in euclidean space i.e. 'as the crow flies'. When I look at their commute time though, I get a completely different answer. From Red Hook to Hudson yards, it will take me 1HR! From Sunnyside to Hudson yards, it will take me 30 mins. That's half the time at the same distance just because you have access to the 7 express train that runs through Sunnyside while in Redhook you have to take a bus and transfer to a slower line.
 
-<FlexContainer classes="flex flex-col md:flex-row flex-wrap justify-around content-around items-center gap-2">
+<FlexContainer classes="flex flex-col md:flex-row flex-wrap  items-center gap-2">
 <Image
   alt="Sunnyside to Hudson Yards"
   src="/assets/blog/betterMaps/sunnyside.png"
@@ -61,7 +61,7 @@ For simplicity’s sake, all of our edges will be unweighted and undirected. Whi
 
 Finding the distance between a single source and all possible sinks in this graph model, we’ll be using breadth first search.
 
-<FlexContainer classes="flex flex-col flex-wrap justify-around content-around items-center gap-2">
+<FlexContainer classes="flex flex-col flex-wrap items-center gap-2">
   <Image
     alt="Gridy Layout"
     src="/assets/blog/betterMaps/plainGraph.png"
@@ -75,16 +75,18 @@ Finding the distance between a single source and all possible sinks in this grap
 </FlexContainer>
 ### Fun visualizations
 
-<FlexContainer classes="flex flex-col justify-around content-around items-center md:flex-row flex-wrap gap-2">
-  <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
+Here are some examples.
+
+<FlexContainer classes="flex flex-col md:flex-row flex-wrap gap-2">
+  <FlexContainer classes="flex flex-col items-center gap-2">
     <h4> Town, No Subway </h4>
     <Map n={5} seed={1} sideLength={300} />
   </FlexContainer>
-  <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
+  <FlexContainer classes="flex flex-col items-center gap-2">
     <h4> Town, Single Subway </h4>
     <Map n={5} seed={0} sideLength={300} subway />
   </FlexContainer>
-  <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
+  <FlexContainer classes="flex flex-col items-center gap-2">
     <h4> Large Town, Large Subway </h4>
     <Map n={30} seed={0} sideLength={300} subway />
   </FlexContainer>
@@ -96,7 +98,7 @@ this visualization will become more useful.
 
 ### Interactive Version
 
-<FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
+<FlexContainer classes="flex flex-col items-center gap-2">
   <Map n={50} seed={0} sideLength={400} subway showControls />
 </FlexContainer>
 
