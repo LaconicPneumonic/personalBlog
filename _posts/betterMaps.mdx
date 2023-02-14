@@ -68,7 +68,7 @@ Finding the distance between a single source and all possible sinks in this grap
   </FlexContainer>
   <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
     <h4> Town, Single Subway </h4>
-    <Map n={5} seed={1} sideLength={300} subway />
+    <Map n={5} seed={0} sideLength={300} subway />
   </FlexContainer>
   <FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
     <h4> Large Town, Large Subway </h4>
@@ -79,6 +79,12 @@ Finding the distance between a single source and all possible sinks in this grap
 In these visualizations, we can see that a single subway can severely influence how 'close' you are
 to where you need to go. While the conclusions may be obvious for our small case, as we increase complexity
 this visualization will become more useful.
+
+### Interactive Version
+
+<FlexContainer classes="flex flex-col justify-around content-around items-center gap-2">
+  <Map n={50} seed={0} sideLength={400} subway showControls />
+</FlexContainer>
 
 ## Next Steps
 

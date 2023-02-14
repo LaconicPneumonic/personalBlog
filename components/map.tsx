@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Chance } from "chance";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Link = {
   head: number;
@@ -11,6 +11,7 @@ type Props = {
   n: number;
   seed: number;
   sideLength: number;
+  showControls?: boolean;
   subway?: boolean;
 };
 
@@ -89,18 +90,21 @@ function randomSubway(seed: number, nodes: number, origin = 0): Array<Link> {
 }
 
 function Map(props: Props) {
+  const [numberOfNodes, setNumberOfNodes] = useState(props.n);
+  const [seed, setSeed] = useState(props.seed);
+
   const nodes: Array<Node> = [];
   const links: Array<Link> = [];
 
-  const radius = props.sideLength / props.n + 1;
-  const spacing = props.sideLength / props.n;
+  const radius = props.sideLength / numberOfNodes + 1;
+  const spacing = props.sideLength / numberOfNodes;
 
   const rowColToIndex = (row: number, col: number): number => {
-    return row * props.n + col;
+    return row * numberOfNodes + col;
   };
 
-  for (let row = 0; row < props.n; row++) {
-    for (let col = 0; col < props.n; col++) {
+  for (let row = 0; row < numberOfNodes; row++) {
+    for (let col = 0; col < numberOfNodes; col++) {
       nodes.push({
         y: row * spacing,
         x: col * spacing,
@@ -128,7 +132,7 @@ function Map(props: Props) {
   );
 
   const subwayLinks: Array<Link> = props.subway
-    ? randomSubway(props.seed, props.n)
+    ? randomSubway(seed, numberOfNodes)
     : [];
 
   const allEdges = subwayLinks.concat(links);
@@ -138,17 +142,17 @@ function Map(props: Props) {
     edgeList[link.tail].add(link.head);
   }
 
-  const ret = colorGraph(0, edgeList);
+  const nodeColors = colorGraph(0, edgeList);
 
-  const ref = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const ctx = ref.current?.getContext("2d");
+    const ctx = canvasRef.current?.getContext("2d");
     if (ctx != null) {
       ctx.clearRect(0, 0, props.sideLength, props.sideLength);
       for (let i = 0; i < nodes.length; i += 1) {
         const node = nodes[i];
-        const color = ret[i];
+        const color = nodeColors[i];
 
         ctx.beginPath();
         ctx.fillStyle = color;
@@ -187,15 +191,87 @@ function Map(props: Props) {
         ctx.stroke();
       }
     }
-  }, [props.n, props.seed, props.sideLength]);
+  }, [numberOfNodes, seed, props.sideLength]);
+
+  const buttonStyles =
+    "px-4 py-2 text-sm font-medium text-white bg-black border border-gray-200 hover:bg-gray-100 hover:text-sky-400";
 
   return (
-    <canvas
-      ref={ref}
-      width={props.sideLength}
-      height={props.sideLength}
-      style={{ border: "1px solid #000000" }}
-    ></canvas>
+    <div>
+      {props.showControls && (
+        <>
+          {" "}
+          <div className="flex place-content-center w-full">
+            <button
+              type="button"
+              className={
+                "flex flex-row items-center justify-start " + buttonStyles
+              }
+              onClick={() => setSeed(Math.random() * 1000)}
+            >
+              RANDOMIZE SUBWAY
+            </button>
+          </div>
+          <div
+            className="flex items-center justify-center w-full py-2"
+            role="group"
+          >
+            <button
+              type="button"
+              className={
+                "flex flex-row items-center justify-end " + buttonStyles
+              }
+              onClick={() => setNumberOfNodes((n) => Math.max(5, n - 1))}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                className="w-4 h-4 mr-2 fill-current"
+                viewBox="-10 -10 120 120"
+              >
+                <polygon
+                  fill="white"
+                  stroke="white"
+                  strokeWidth={20}
+                  strokeLinejoin="round"
+                  points="0,50 100,0 100,100"
+                />
+              </svg>
+              DECR
+            </button>
+            <button
+              type="button"
+              className={
+                "flex flex-row items-center justify-start " + buttonStyles
+              }
+              onClick={() => setNumberOfNodes((n) => n + 1)}
+            >
+              INCR
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                className="w-4 h-4 ml-2 fill-current"
+                viewBox="-10 -10 120 120"
+              >
+                <polygon
+                  fill="white"
+                  stroke="white"
+                  strokeWidth={20}
+                  strokeLinejoin="round"
+                  points="100,50 0,100 0,0"
+                />
+              </svg>
+            </button>
+          </div>
+        </>
+      )}
+      <canvas
+        ref={canvasRef}
+        width={props.sideLength}
+        height={props.sideLength}
+        style={{ border: "1px solid #000000" }}
+      ></canvas>
+    </div>
   );
 }
 
