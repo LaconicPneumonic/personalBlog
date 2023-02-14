@@ -11,12 +11,14 @@ import Container from "../../components/container";
 import Header from "../../components/header";
 import Highlighter from "../../components/highlighter";
 import Layout from "../../components/layout";
+import Map from "../../components/map";
 import PostHeader from "../../components/post-header";
 import PostTitle from "../../components/post-title";
 import type PostType from "../../interfaces/post";
 import { getAllPosts, getPostBySlug } from "../../lib/api";
 import { BLOG_NAME } from "../../lib/constants";
 import FlexContainer from "../../components/flexContainer";
+import OrderedList from "../../components/orderedList";
 
 type Props = {
   post: PostType;
@@ -61,6 +63,8 @@ export default function Post({ post, morePosts, preview }: Props) {
                   FlexContainer,
                   Highlighter,
                   Image,
+                  Map,
+                  ol: OrderedList,
                 }}
               />
             </article>
