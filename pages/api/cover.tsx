@@ -1,4 +1,4 @@
-import { ImageResponse } from "@vercel/og";
+import { ImageResponse } from "next/og";
 import * as d3 from "d3-scale-chromatic";
 import { NextRequest } from "next/server";
 

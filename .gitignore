@@ -39,3 +39,6 @@ next-env.d.ts
 
 # notes
 TODO.md
+
+# generated at build
+/public/feed.xml
