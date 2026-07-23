@@ -5,8 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `npm run dev` — start the Next.js dev server
-- `npm run build` — production build (also validates that all posts bundle correctly)
+- `npm run build` — production build (also validates that all posts bundle correctly); a `prebuild` hook runs `scripts/generate-rss.mjs`, which writes `public/feed.xml` (gitignored) from `_posts` frontmatter
 - `npm run typecheck` — run `tsc` (no emit)
+
+Dependency notes: `next` is pinned to the 15.5.x React-18 security-backport line (do not set it back to `latest`); `package.json` `overrides` force patched `postcss`/`sharp`/`uuid` inside next and mdx-bundler — keep audit clean when touching deps. `engines.node` pins Node 22 for Vercel builds.
 
 There is no lint setup and no test suite. TypeScript strict mode is OFF (`tsconfig.json`).
 
