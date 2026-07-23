@@ -194,7 +194,7 @@ function Map(props: Props) {
   }, [numberOfNodes, seed, props.sideLength]);
 
   const buttonStyles =
-    "px-4 py-2 text-sm font-medium text-white bg-black border border-gray-200 hover:bg-gray-100 hover:text-sky-400";
+    "px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink bg-code-bg border border-line hover:border-accent hover:text-accent";
 
   return (
     <div>
@@ -229,8 +229,8 @@ function Map(props: Props) {
                 viewBox="-10 -10 120 120"
               >
                 <polygon
-                  fill="white"
-                  stroke="white"
+                  fill="currentColor"
+                  stroke="currentColor"
                   strokeWidth={20}
                   strokeLinejoin="round"
                   points="0,50 100,0 100,100"
@@ -253,8 +253,8 @@ function Map(props: Props) {
                 viewBox="-10 -10 120 120"
               >
                 <polygon
-                  fill="white"
-                  stroke="white"
+                  fill="currentColor"
+                  stroke="currentColor"
                   strokeWidth={20}
                   strokeLinejoin="round"
                   points="100,50 0,100 0,0"
@@ -268,7 +268,7 @@ function Map(props: Props) {
         ref={canvasRef}
         width={props.sideLength}
         height={props.sideLength}
-        style={{ border: "1px solid #000000" }}
+        className="border border-line bg-white"
       ></canvas>
     </div>
   );

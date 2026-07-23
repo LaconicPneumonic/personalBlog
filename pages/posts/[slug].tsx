@@ -1,24 +1,19 @@
 import { bundleMDX } from "mdx-bundler";
 import { getMDXComponent } from "mdx-bundler/client";
-import Image from "next/image";
 import ErrorPage from "next/error";
 import { useRouter } from "next/router";
 
 import Head from "next/head";
 import { useMemo } from "react";
-import BootstrapCarousel from "../../components/carousel";
 import Container from "../../components/container";
 import Header from "../../components/header";
-import Highlighter from "../../components/highlighter";
 import Layout from "../../components/layout";
-import Map from "../../components/map";
+import mdxComponents from "../../components/mdx-components";
 import PostHeader from "../../components/post-header";
 import PostTitle from "../../components/post-title";
 import type PostType from "../../interfaces/post";
 import { getAllPosts, getPostBySlug } from "../../lib/api";
 import { BLOG_NAME } from "../../lib/constants";
-import FlexContainer from "../../components/flexContainer";
-import OrderedList from "../../components/orderedList";
 
 type Props = {
   post: PostType;
@@ -45,7 +40,7 @@ export default function Post({ post, morePosts, preview }: Props) {
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <article className="mb-32">
+            <article className="mb-24">
               <Head>
                 <title>
                   {post.title} | {BLOG_NAME}
@@ -54,19 +49,12 @@ export default function Post({ post, morePosts, preview }: Props) {
               </Head>
               <PostHeader
                 title={post.title}
-                coverImage={post.coverImage}
                 date={post.date}
+                excerpt={post.excerpt}
               />
-              <PostContent
-                components={{
-                  BootstrapCarousel,
-                  FlexContainer,
-                  Highlighter,
-                  Image,
-                  Map,
-                  ol: OrderedList,
-                }}
-              />
+              <div className="mx-auto max-w-[68ch] text-lg leading-[1.7]">
+                <PostContent components={mdxComponents} />
+              </div>
             </article>
           </>
         )}
@@ -88,6 +76,7 @@ export async function getStaticProps({ params }: Params) {
     "slug",
     "author",
     "content",
+    "excerpt",
     "ogImage",
     "coverImage",
   ]);

@@ -1,6 +1,7 @@
 import DateFormatter from "./date-formatter";
 import CoverImage from "./cover-image";
 import Link from "next/link";
+import SectionLabel from "./section-label";
 
 type Props = {
   title: string;
@@ -12,28 +13,32 @@ type Props = {
 
 const HeroPost = ({ title, coverImage, date, excerpt, slug }: Props) => {
   return (
-    <section>
-      <div className="mb-8 md:mb-16">
-        <CoverImage title={title} src={coverImage} slug={slug} />
-      </div>
-      <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-8 mb-20 md:mb-28">
+    <section className="mt-16">
+      <SectionLabel>Latest entry</SectionLabel>
+      <div className="grid gap-6 md:grid-cols-[1.15fr_0.85fr] md:items-center md:gap-9">
         <div>
-          <h3 className="mb-4 text-4xl lg:text-5xl leading-tight">
+          <span className="font-mono text-[0.8125rem] tabular-nums text-muted">
+            <DateFormatter dateString={date} />
+          </span>
+          <h3 className="mb-3 mt-1.5 text-3xl font-bold leading-tight [text-wrap:balance] md:text-4xl">
             <Link
               as={`/posts/${slug}`}
               href="/posts/[slug]"
-              className="hover:underline"
+              className="hover:text-accent"
             >
               {title}
             </Link>
           </h3>
-          <div className="mb-4 md:mb-0 text-lg">
-            <DateFormatter dateString={date} />
-          </div>
+          <p className="mb-4 leading-relaxed">{excerpt}</p>
+          <Link
+            as={`/posts/${slug}`}
+            href="/posts/[slug]"
+            className="font-mono text-[0.8125rem] text-accent hover:underline hover:underline-offset-[3px]"
+          >
+            read the entry →
+          </Link>
         </div>
-        <div>
-          <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
-        </div>
+        <CoverImage title={title} src={coverImage} slug={slug} />
       </div>
     </section>
   );

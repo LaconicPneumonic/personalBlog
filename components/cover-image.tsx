@@ -13,16 +13,12 @@ const CoverImage = ({ title, src, slug }: Props) => {
     <Image
       src={src}
       alt={`Cover Image for ${title}`}
-      className={cn("shadow-sm w-full", {
-        "hover:shadow-lg transition-shadow duration-200": slug,
+      className={cn("aspect-[2/1] w-full border border-line object-cover", {
+        "transition-opacity duration-200 hover:opacity-90": slug,
       })}
       width={1300}
-      height={630}
-      style={{
-        objectFit: "cover",
-        height: "35vh",
-        aspectRatio: 2 / 1,
-      }}
+      height={650}
+      unoptimized={src.startsWith("/api/")}
     />
   );
   return (

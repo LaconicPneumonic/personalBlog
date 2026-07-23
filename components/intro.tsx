@@ -1,14 +1,20 @@
 import { BLOG_NAME } from "../lib/constants";
+import SinebowBand from "./sinebow-band";
 
 const Intro = () => {
   return (
-    <section className="flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12">
-      <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-tight md:pr-8">
+    <section className="pb-2 pt-10">
+      <h1 className="mb-3 text-5xl font-bold leading-none tracking-tight md:text-6xl">
         {BLOG_NAME}
       </h1>
-      <h4 className="text-center md:text-left text-lg mt-5 md:pl-8">
-        Embracing complexity and learning by practice
-      </h4>
+      <p className="mb-9 text-lg italic text-muted">
+        Embracing complexity and learning by practice.
+      </p>
+      <SinebowBand />
+      <p className="mt-2.5 font-mono text-xs text-muted">
+        fig. 0 — sinebow interference field, drawn live by{" "}
+        <span className="text-accent">pages/api/cover.tsx</span>
+      </p>
     </section>
   );
 };

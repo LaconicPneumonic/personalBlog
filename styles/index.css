@@ -1,3 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Self-hosted latin subsets; variable weight for STIX Two Text. */
+@font-face {
+  font-family: "STIX Two Text";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/STIXTwoText-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "STIX Two Text";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/STIXTwoText-Italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/IBMPlexMono-Italic-latin.woff2") format("woff2");
+}
+
+/* Design tokens: graph paper (light) / blackboard (dark). */
+:root {
+  --paper: #f8fafb;
+  --ink: #1a2028;
+  --muted: #5c6875;
+  --line: #d8e2ec;
+  --grid: rgba(90, 130, 180, 0.1);
+  --accent: #c23b22;
+  --code-bg: #eef3f7;
+  --syn-keyword: #c23b22;
+  --syn-string: #2c5fa8;
+  --syn-comment: #7b8794;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141a21;
+    --ink: #e8ecef;
+    --muted: #93a1ae;
+    --line: #2a343f;
+    --grid: rgba(140, 180, 220, 0.07);
+    --accent: #ff8266;
+    --code-bg: #1b232c;
+    --syn-keyword: #ff8266;
+    --syn-string: #7fa7e8;
+    --syn-comment: #6c7a87;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-serif text-ink;
+    background-color: var(--paper);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
