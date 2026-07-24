@@ -4,7 +4,11 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-const SITE_URL = "https://personal-blog-laconicpneumonics-projects.vercel.app";
+// On Vercel this is the shortest production custom domain once one is
+// attached, so the feed follows the canonical domain automatically.
+const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "https://personal-blog-laconicpneumonics-projects.vercel.app";
 const BLOG_NAME = "Code W/ Anthony";
 const DESCRIPTION = `${BLOG_NAME} — embracing complexity and learning by practice.`;
 
