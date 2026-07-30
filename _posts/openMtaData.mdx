@@ -1,0 +1,249 @@
+---
+title: "Open MTA Data"
+excerpt: "Exploring GTFS feeds published by the Metropolitan Transportation Authority (MTA)"
+coverImage: "/assets/blog/openMtaData/hourlyDeparturesAdjusted.png"
+date: "2025-03-02T12:00:00.000Z"
+author:
+  name: Anthony Rolland
+  picture: "https://media.licdn.com/dms/image/D4D35AQEZyxo_dMjbMA/profile-framedphoto-shrink_100_100/0/1670519479753?e=1672977600&v=beta&t=nCsjIhV8KTriCxjJQ9kLcxs5exT26xquyISF7NQwtNQ"
+ogImage:
+  url: "/assets/blog/openMtaData/hourlyDeparturesAdjusted.png"
+---
+
+[_this article was originally published on my Substack here_](https://anthonyrolland.substack.com/p/open-mta-data)
+
+We're going to do some exploratory data analysis of the General Transit Feed Specification (GTFS). It's an open source data specification originally pioneered by [TriMet](https://en.wikipedia.org/wiki/TriMet) and Google for use in Google Maps. Since then it has expanded to multiple public transit authorities around the world and is used by many public and private resources.
+
+Almost 20 years later many public transport authorities release their GTFS data to be accessible by the public. While most of the public interacts with it through transportation applications like Google and Apple Maps, few interact with the data directly. With a lower-level access comes the opportunity for greater and more personal insights. In this article, I will be doing a simple exploration of the MTA's subway GTFS data.
+
+data pulled here: [https://www.mta.info/developers](https://www.mta.info/developers)
+
+_If this is your first time on this blog, welcome! I'm a software engineer working in distributed systems and finance. In my free time, I try to explore and process the world using code. Thanks for reading!_
+
+## Entities
+
+MTA's GTFS is aimed towards being both machine and human readable, so it's delivered as a series of CSVs with the following entities:
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Stops schema"
+    src="/assets/blog/openMtaData/stops.png"
+    width={401}
+    height={271}
+  />
+</FlexContainer>
+
+Stops corresponds to physical location that a train stops with a single stop being split by direction:
+
+<Highlighter
+  language="plaintext"
+  codeString={`stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station
+A27,42 St-Port Authority Bus Terminal,40.757308,-73.989735,1,
+A27N,42 St-Port Authority Bus Terminal,40.757308,-73.989735,,A27
+A27S,42 St-Port Authority Bus Terminal,40.757308,-73.989735,,A27`}
+/>
+
+Where A27N and A27S are the northbound and southbound sides of the station servicing A, C and E.
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Stop Times schema"
+    src="/assets/blog/openMtaData/stopTimes.png"
+    width={524}
+    height={270}
+  />
+</FlexContainer>
+
+Stop times contains the data that we intuitively associate with trains and their routes. For a particular train, this table describes all of its stops, arrival time, departure time and stop_sequence. The stop_sequence is implied by the arrival and departure times, but I imagine it was included for convenience.
+
+<Highlighter
+  language="plaintext"
+  codeString={`trip_id,stop_id,arrival_time,departure_time,stop_sequence
+AFA24GEN-1038-Sunday-00_000600_1..S03R,101S,00:06:00,00:06:00,1
+AFA24GEN-1038-Sunday-00_000600_1..S03R,103S,00:07:30,00:07:30,2
+AFA24GEN-1038-Sunday-00_000600_1..S03R,104S,00:09:00,00:09:00,3`}
+/>
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Transfers schema"
+    src="/assets/blog/openMtaData/transfers.png"
+    width={542}
+    height={263}
+  />
+</FlexContainer>
+
+Transfers describes whether one can transfer in between parent stations and how much time it will take
+
+<Highlighter
+  language="plaintext"
+  codeString={`from_stop_id,to_stop_id,transfer_type,min_transfer_time
+101,101,2,180
+103,103,2,180
+104,104,2,180`}
+/>
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Routes schema"
+    src="/assets/blog/openMtaData/routes.png"
+    width={524}
+    height={371}
+  />
+</FlexContainer>
+
+Routes are essentially the train line, 7, 4, 5, F express, G … etc
+
+<Highlighter
+  language="plaintext"
+  codeString={`route_id,route_short_name,route_long_name
+1,1,Broadway - 7 Avenue Local
+2,2,7 Avenue Express
+5,5,Lexington Avenue Express
+7,7,Flushing Local
+7X,7X,Flushing Express`}
+/>
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Trips schema"
+    src="/assets/blog/openMtaData/trips.png"
+    width={524}
+    height={276}
+  />
+</FlexContainer>
+
+Trips describe the individual train running on the track
+
+<Highlighter
+  language="plaintext"
+  codeString={`route_id,trip_id,service_id,trip_headsign,direction_id,shape_id
+1,AFA24GEN-1038-Sunday-00_000600_1..S03R,Sunday,South Ferry,1,1..S03R
+1,AFA24GEN-1038-Sunday-00_002600_1..S03R,Sunday,South Ferry,1,1..S03R
+1,AFA24GEN-1038-Sunday-00_004600_1..S03R,Sunday,South Ferry,1,1..S03R`}
+/>
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Calendar schema"
+    src="/assets/blog/openMtaData/calendar.png"
+    width={524}
+    height={374}
+  />
+</FlexContainer>
+
+The calendar describes the days of the week that a particular trip associated with the service_id actually runs. In particular, services are described by days of the week not the literal date itself. This makes the dataset much smaller, but as we'll find out in later posts that it will complicate the idea of which train is coming "next". We know that Monday is after Sunday, but representing that programmatically is a bit more complicated than saying that 2/17/25 is after 2/16/25.
+
+<Highlighter
+  language="plaintext"
+  codeString={`service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
+Sunday,0,0,0,0,0,0,1,20250118,20250518
+Saturday,0,0,0,0,0,1,0,20250118,20250518
+Weekday,1,1,1,1,1,0,0,20250118,20250518
+Weekday-1,1,1,1,1,1,0,0,20250118,20250214
+Weekday-2,1,1,1,1,1,0,0,20250218,20250518`}
+/>
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Shapes schema"
+    src="/assets/blog/openMtaData/shapes.png"
+    width={524}
+    height={256}
+  />
+</FlexContainer>
+
+Shapes describes the outline of a route on a map using longitude and latittude.
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Calendar Dates schema"
+    src="/assets/blog/openMtaData/calendarDates.png"
+    width={524}
+    height={230}
+  />
+</FlexContainer>
+
+Exceptions to particular services by dates
+
+<Highlighter
+  language="plaintext"
+  codeString={`service_id,date,exception_type
+Saturday,20250217,1
+Weekday,20250217,2`}
+/>
+
+In this date we can see that we're running the Saturday service on Monday 2/17/25 since it's a President's day which is a national holiday in the United States of America.
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Agency schema"
+    src="/assets/blog/openMtaData/agency.png"
+    width={524}
+    height={277}
+  />
+</FlexContainer>
+
+Represents the agency associated with the all the above transportation data. When the GTFS data contains multiple agencies, this would let you to associate different routes with different fare information. Since everything in NYC is 2.75 these days there's no need to use this here.
+
+## Simple Questions … Simple Answers
+
+With the data as is, let's ask some simple questions
+
+### How many trips depart every hour?
+
+The naive way to answer this question is to just parse the hour component of the string departure time in the stop times table. It comes in the form hh:mm:ss. A naive parsing produces the following chart:
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Trip departures by hour, naive parsing"
+    src="/assets/blog/openMtaData/hourlyDeparturesRaw.png"
+    width={800}
+    height={600}
+  />
+</FlexContainer>
+
+We can see that some hour values are out of the expected 0-23 hr bounds. For example, we could have a departure time of **Monday 25:00:00** when **Tuesday 01:00:00** would suffice. That's something we will have to handle once we start to create routes in this map. The adjusted graph shows a much more obvious difference between working hours and non-working hours.
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Trip departures by hour, adjusted for 24hr overflow"
+    src="/assets/blog/openMtaData/hourlyDeparturesAdjusted.png"
+    width={800}
+    height={600}
+  />
+</FlexContainer>
+
+### Which routes have the most trips on weekdays?
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Number of weekday trips by route"
+    src="/assets/blog/openMtaData/weekdayRouteTrips.png"
+    width={800}
+    height={600}
+  />
+</FlexContainer>
+
+This diagram describes the number of Monday-Friday trips where a trip is a single train traveling from the first stop to the last top on a route. Each direction along a route is a separate trip.
+
+As we can see there's a lot of love for Manhattan bound routes on the weekday. NYC residents looking to commute between Brooklyn and Queens tend to go through Manhattan for this very reason. If you are a commuter to the office, trip frequency can really affect your ability to be on time to work. Let's try to quantify that.
+
+### Upper East vs Upper West
+
+The upper east and upper west side of Manhattan have their unique and loveable qualities. I know fellow residents who will argue ad nauseum about which side has the best apartments, where the best food is and even who has the best river runs (it's the west side). For the sake of creating a problem we can solve, let's imagine you're commuting to time square 42nd street from 7:00-8:45a.m. on weekdays. You want to be at most 10 minutes from work, so you're choosing between living at [103rd street on the west side](https://www.google.com/maps/dir/103+St,+New+York,+NY+10025/Times+Sq%E2%80%9342+St,+New+York,+NY/@40.7879455,-73.9887107,16.32z/data=!4m14!4m13!1m5!1m1!1s0x89c2f625ad24081f:0x743b2510fc2469e5!2m2!1d-73.96843!2d40.799374!1m5!1m1!1s0x89c259ab49ca241b:0xb22a3843c5b03c10!2m2!1d-73.986938!2d40.756031!3e3!5m1!1e2?entry=ttu) and [86th street on the east side](https://www.google.com/maps/place/86+St/@40.7772205,-73.9536964,17.78z/am=t/data=!4m23!1m16!4m15!1m6!1m2!1s0x89c258bb0a1e4c3f:0x492672184bb8748f!2s86+St,+300-398+East+86th+St,+New+York,+NY+10028!2m2!1d-73.9517576!2d40.7778871!1m6!1m2!1s0x89c259ab49ca241b:0xb22a3843c5b03c10!2sTimes+Sq%E2%80%9342+St,+New+York,+NY+10036!2m2!1d-73.986938!2d40.756031!3e3!3m5!1s0x89c258bb0a1e4c3f:0x492672184bb8748f!8m2!3d40.7778871!4d-73.9517576!16s%2Fm%2F0crflb3!5m1!1e2?entry=ttu). Your routes are the 1 and the Q respectively.
+
+<FlexContainer classes="flex flex-col items-center gap-2">
+  <Image
+    alt="Wait time distributions for the 1 train (119S) and Q train (Q04S)"
+    src="/assets/blog/openMtaData/waitTimes1vsQ.png"
+    width={800}
+    height={600}
+  />
+</FlexContainer>
+
+With the 1 train on the left and the Q train on the right, we can see there are small differences in your commute. The median wait time for the 1 train is about 3.5 minutes while the time on the right is 7 minutes. If you are commuting to work on the Q and miss your train, half the time that will add at least 7 minutes to your commute. Where there is a difference, there is an opportunity for optimization!
+
+## Conclusion
+
+The next part of the series will involve me turning this raw GTFS data into a routable data structure. We will cover the process, the pitfalls and some basic navigation methods. Stay tuned!
